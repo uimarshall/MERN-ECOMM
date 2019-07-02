@@ -1,0 +1,55 @@
+img {
+	width: 100%;
+}
+
+.landing {
+	position: relative;
+	background: url("./img/showcase2.jpg") no-repeat;
+	background-size: cover;
+	background-position: center;
+	height: 100vh;
+	margin-top: -24px;
+	margin-bottom: -50px;
+}
+
+.landing-inner {
+	padding-top: 80px;
+}
+
+.dark-overlay {
+	background-color: rgba(0, 0, 0, 0.7);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.card-form {
+	opacity: 0.9;
+}
+
+.latest-profiles-img {
+	width: 40px;
+	height: 40px;
+}
+
+.form-control::placeholder {
+	color: #bbb !important;
+}
+.search-box {
+	width: 809px;
+	height: 43px;
+	left: 365px;
+	top: 16px;
+
+	background: #ffffff;
+	mix-blend-mode: normal;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+input.mr-sm-2 {
+	margin: auto;
+	width: 809px;
+	padding-left: 34rem;
+	padding-right: 5rem;
+}
