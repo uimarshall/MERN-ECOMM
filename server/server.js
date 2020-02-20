@@ -4,29 +4,28 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 // We will be storing the user Credentials in the cookie
 const cookieParser = require("cookie-parser");
+// const expressValidator = require("express-validator");
+
+const path = require("path");
+const dotenv = require("dotenv");
 
 // Load the environment variables
-require("dotenv").config();
+dotenv.config({ path: "./config/.env" });
+const connectDb = require("../config/db");
 const usersRoute = require("../routes/api/users");
 
 // Initialise app
 const app = express();
 
 // Connect Db
-const db = process.env.MONGO_URI;
-mongoose
-	.connect(db, {
-		useNewUrlParser: true,
-		useCreateIndex: true
-	})
-	.then(() => {
-		console.log("Database Connected!");
-	});
+connectDb();
 
 // Middlewares
 app.use(morgan("dev"));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(express.json());
 app.use(cookieParser());
+// app.use(expressValidator());
 
 // Routes Middleware
 app.use("/api/users", usersRoute);
@@ -34,5 +33,5 @@ app.use("/api/users", usersRoute);
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });
