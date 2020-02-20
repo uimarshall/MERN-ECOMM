@@ -1,4 +1,7 @@
 const HttpStatus = require("http-status-codes");
+const jwt = require("jsonwebtoken"); //to generate signed token
+const expressJwt = require("express-jwt"); //for authorisatn check
+
 const StatusText = require("../lib/constants/constants");
 const User = require("../models/User");
 
@@ -52,3 +55,23 @@ exports.signup = async(req, res) => {
 //         });
 //     });
 // };
+
+// Request and await a response - This is what async await is!
+exports.signin = async(req, res) => {
+    // Find user by email
+    try {
+        const { email, password } = req.body;
+        const userFound = await User.findOne({ email });
+        return res.status(OK).json({
+            data: userFound,
+            status: SUCCESS
+        });
+    } catch (error) {
+        if (error || !userFound) {
+            return res.status(BAD_REQUEST).send({
+                message: `User with this ${email} does not exist`,
+                status: FAIL
+            });
+        }
+    }
+};
