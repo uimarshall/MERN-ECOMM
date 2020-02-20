@@ -59,19 +59,41 @@ exports.signup = async(req, res) => {
 // Request and await a response - This is what async await is!
 exports.signin = async(req, res) => {
     // Find user by email
+
     try {
         const { email, password } = req.body;
-        const userFound = await User.findOne({ email });
-        return res.status(OK).json({
-            data: userFound,
-            status: SUCCESS
+        await User.findOne({ email }, (err, userFound) => {
+            if (err || !userFound) {
+                return res.status(BAD_REQUEST).send({
+                    message: `User with this ${email} does not exist`
+                });
+            }
+
+            // If user cannot be authenticated
+            if (!userFound.authenticate(password)) {
+                return res.status(UNAUTHORIZED).send({
+                    message: `Email and password don't match`
+                });
+            }
+            // if user is found,ensure that d email&password match- i.e authenticate
+            //  If authenticated, generate a signed token wt userId & secret
+            const token = jwt.sign({ _id: userFound._id }, process.env.JWT_SECRET);
+            // Persist the token as 't' in cookie with expiry date
+            res.cookie("t", token, { expire: new Date() + 9999 });
+            // return response with user and token to frontend client
+            const { _id, name, email, role } = userFound;
+            return res.json({ token, userFound: { _id, email, name, role } });
         });
     } catch (error) {
-        if (error || !userFound) {
-            return res.status(BAD_REQUEST).send({
-                message: `User with this ${email} does not exist`,
-                status: FAIL
-            });
-        }
+        return res.status(INTERNAL_SERVER_ERROR).send({
+            message: HttpStatus.getStatusText(INTERNAL_SERVER_ERROR),
+            status: FAIL
+        });
     }
+};
+
+exports.signout = (req, res) => {
+    // To sign out ,you clear the cookie
+    res.clearCookie("t");
+    res.json({ message: "You have signed out successfully!" });
 };
