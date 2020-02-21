@@ -7,7 +7,7 @@ const {
     signin,
     signout,
     secured
-} = require("../../controllers/userAuth");
+} = require("../../controllers/userAuthController");
 const { userValidationRules, validate } = require("../../validator");
 
 router.post("/signup", userValidationRules(), validate, signup);

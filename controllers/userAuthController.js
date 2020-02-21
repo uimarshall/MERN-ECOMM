@@ -19,7 +19,6 @@ const {
 } = HttpStatus;
 exports.signup = async(req, res) => {
     try {
-        console.log("req.body", req.body);
         const newUser = await new User(req.body);
         const userCreated = await newUser.save();
         // const userCreated = await User.create(req.body);
@@ -30,7 +29,7 @@ exports.signup = async(req, res) => {
         });
     } catch (err) {
         if (err) {
-            return res.status(INTERNAL_SERVER_ERROR).json({
+            return res.status(BAD_REQUEST).json({
                 err: errorHandler(err)
             });
         }
@@ -97,36 +96,4 @@ exports.signout = (req, res) => {
     // To sign out ,you clear the cookie
     res.clearCookie("t");
     res.json({ message: "You have signed out successfully!" });
-};
-
-// Auth Middleware
-// To use 'expressJwt', you need to install 'cookie-parser'
-exports.secured = expressJwt({
-    secret: process.env.JWT_SECRET,
-    userProperty: "auth"
-});
-
-// Regular User
-exports.isAuth = (req, res, next) => {
-    let user = req.profile && req.auth && req.profile._id === req.auth._id;
-    if (!user) {
-        return res.status(FORBIDDEN).send({
-            message: HttpStatus.getStatusText(FORBIDDEN),
-            status: FAIL
-        });
-    }
-    next();
-};
-
-// Admin User
-exports.isAdmin = (req, res, next) => {
-    // If not admin,deny access
-    if (req.profile.role === 0) {
-        //regular user has role=0
-        return res.status(FORBIDDEN).send({
-            message: HttpStatus.getStatusText(FORBIDDEN),
-            status: FAIL
-        });
-    }
-    next();
 };
