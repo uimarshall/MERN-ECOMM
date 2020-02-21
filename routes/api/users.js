@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const { secured, isAdmin, isAuth } = require("../../controllers/userAuth");
 
-// Require signup from controllers
-const { signup, signin, signout } = require("../../controllers/user");
-const { userValidationRules, validate } = require("../../validator");
+const { userByid } = require("../../controllers/user");
+router.get("/secret/:userId", secured, isAuth, (req, res) => {
+    res.json({ user: req.profile });
+});
 
-router.post("/signup", userValidationRules(), validate, signup);
-router.post("/signin", signin);
-router.get("/signout", signout);
+// Anytime there is a user id, we run the userByid middleware which make d user info available thru the 'req.profile'
+router.param("userId", userByid);
 
 module.exports = router;

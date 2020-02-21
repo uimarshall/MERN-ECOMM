@@ -1,11 +1,6 @@
-const HttpStatus = require("http-status-codes");
-const jwt = require("jsonwebtoken"); //to generate signed token
-const expressJwt = require("express-jwt"); //for authorisatn check
-
-const StatusText = require("../lib/constants/constants");
 const User = require("../models/User");
-
-const { errorHandler } = require("../utils/dbErrorHandler");
+const HttpStatus = require("http-status-codes");
+const StatusText = require("../lib/constants/constants");
 const { ERROR, FAIL, SUCCESS } = StatusText;
 const {
     ACCEPTED,
@@ -17,83 +12,18 @@ const {
     FORBIDDEN,
     OK
 } = HttpStatus;
-exports.signup = async(req, res) => {
-    try {
-        console.log("req.body", req.body);
-        const newUser = await new User(req.body);
-        const userCreated = await newUser.save();
-        // const userCreated = await User.create(req.body);
-        return res.status(CREATED).json({
-            // The userCreated is an object
-            data: userCreated,
-            status: SUCCESS
-        });
-    } catch (err) {
-        if (err) {
-            return res.status(INTERNAL_SERVER_ERROR).json({
-                err: errorHandler(err)
+// The 'id' will come from the route params
+exports.userByid = (req, res, next, id) => {
+    User.findById(id).exec((err, userFound) => {
+        if (err || !userFound) {
+            return res.status(BAD_REQUEST).send({
+                message: HttpStatus.getStatusText(BAD_REQUEST),
+                status: FAIL
             });
         }
-        // Return Empty list if 'req.body' is does not return anything
-        return res.status(INTERNAL_SERVER_ERROR).send({
-            message: HttpStatus.getStatusText(INTERNAL_SERVER_ERROR),
-            status: FAIL
-        });
-    }
-};
-// exports.signup = (req, res) => {
-//     console.log("req.body", req.body);
-//     const user = new User(req.body);
-//     user.save((err, user) => {
-//         if (err) {
-//             return res.status(400).json({
-//                 err
-//             });
-//         }
-//         res.json({
-//             user
-//         });
-//     });
-// };
-
-// Request and await a response - This is what async await is!
-exports.signin = async(req, res) => {
-    // Find user by email
-
-    try {
-        const { email, password } = req.body;
-        await User.findOne({ email }, (err, userFound) => {
-            if (err || !userFound) {
-                return res.status(BAD_REQUEST).send({
-                    message: `User with this ${email} does not exist`
-                });
-            }
-
-            // If user cannot be authenticated
-            if (!userFound.authenticate(password)) {
-                return res.status(UNAUTHORIZED).send({
-                    message: `Email and password don't match`
-                });
-            }
-            // if user is found,ensure that d email&password match- i.e authenticate
-            //  If authenticated, generate a signed token wt userId & secret
-            const token = jwt.sign({ _id: userFound._id }, process.env.JWT_SECRET);
-            // Persist the token as 't' in cookie with expiry date
-            res.cookie("t", token, { expire: new Date() + 9999 });
-            // return response with user and token to frontend client
-            const { _id, name, email, role } = userFound;
-            return res.json({ token, userFound: { _id, email, name, role } });
-        });
-    } catch (error) {
-        return res.status(INTERNAL_SERVER_ERROR).send({
-            message: HttpStatus.getStatusText(INTERNAL_SERVER_ERROR),
-            status: FAIL
-        });
-    }
-};
-
-exports.signout = (req, res) => {
-    // To sign out ,you clear the cookie
-    res.clearCookie("t");
-    res.json({ message: "You have signed out successfully!" });
+        // If user found, then add d user info to d 'req' obj wt d name = 'profile'
+        req.profile = userFound;
+        // Call next middleware
+        next();
+    });
 };

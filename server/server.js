@@ -12,6 +12,7 @@ const dotenv = require("dotenv");
 // Load the environment variables
 dotenv.config({ path: "./config/.env" });
 const connectDb = require("../config/db");
+const usersAuthRoute = require("../routes/api/usersAuth");
 const usersRoute = require("../routes/api/users");
 
 // Initialise app
@@ -28,6 +29,7 @@ app.use(cookieParser());
 // app.use(expressValidator());
 
 // Routes Middleware
+app.use("/api/users", usersAuthRoute);
 app.use("/api/users", usersRoute);
 
 const port = process.env.PORT || 5000;
