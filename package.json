@@ -6,7 +6,7 @@
     "scripts": {
         "client-install": "npm install --prefix client",
         "start": "node server/server.js",
-        "server": "nodemon server/server.js",
+        "server": "nodemon  server/server.js -L",
         "client": "npm start --prefix client",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "test": "mocha"
@@ -30,11 +30,15 @@
         "express": "^4.17.1",
         "express-jwt": "^5.3.1",
         "express-validator": "^6.4.0",
+        "formidable": "^1.2.1",
         "http-status-codes": "^1.3.2",
         "jsonwebtoken": "^8.5.1",
+        "lodash": "^4.17.15",
         "mongoose": "^5.6.1",
         "morgan": "^1.9.1",
         "uuid": "^3.3.2"
     },
-    "devDependencies": {}
+    "devDependencies": {
+        "nodemon": "^2.0.2"
+    }
 }
