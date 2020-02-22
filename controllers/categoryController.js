@@ -14,6 +14,8 @@ const {
     OK
 } = HttpStatus;
 
+
+// Create Category
 exports.createCategory = async(req, res) => {
     try {
         const newCategory = await new Category(req.body);
@@ -31,3 +33,12 @@ exports.createCategory = async(req, res) => {
         }
     }
 };
+
+// Read/Get Category
+exports.getCategory = (req, res) => {
+
+    return res.status(CREATED).json({
+        data: req.category,
+        message: SUCCESS
+    });
+}
