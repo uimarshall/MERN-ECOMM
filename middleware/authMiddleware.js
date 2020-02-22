@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
+const Category = require("../models/Category");
 const jwt = require("jsonwebtoken"); //to generate signed token
 const expressJwt = require("express-jwt"); //for authorisatn check
 const HttpStatus = require("http-status-codes");
@@ -81,6 +82,21 @@ exports.productById = (req, res, next, id) => {
 
         req.product = productFound;
         console.log("request.product", req.product);
+        // Call next middleware
+        next();
+    });
+};
+// Category Middleware
+exports.categoryById = (req, res, next, id) => {
+    Category.findById(id).exec((err, categoryFound) => {
+        if (err || !categoryFound) {
+            return res.status(BAD_REQUEST).send({
+                error: "Category does not exist!"
+            });
+        }
+
+        req.category = categoryFound;
+
         // Call next middleware
         next();
     });
