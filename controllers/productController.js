@@ -180,10 +180,38 @@ exports.getAllProducts = (req, res) => {
         ])
         .limit(limit)
         .exec((err, productsFound) => {
-            console.log(productsFound);
+            // console.log(productsFound);
             if (err) {
                 return res.status(BAD_REQUEST).json({
-                    message: HttpStatus.getStatusText(BAD_REQUEST),
+                    message: "Products not found",
+                    status: FAIL
+                });
+            }
+            return res.status(ACCEPTED).json({
+                data: productsFound,
+                message: SUCCESS
+            });
+        });
+};
+
+// Get Related Products
+/**1St, find the products based on the req product category
+ * other products that has the same category, will be returned
+ */
+
+exports.getRelatedProducts = (req, res) => {
+    let limit = req.query.limit ? parseInt(req.query.limit) : 6;
+    Product.find({
+            _id: { $ne: req.product },
+            category: req.product.category
+        })
+        .limit(limit)
+        .populate("Category", "_id name ")
+        .exec((err, productsFound) => {
+            // console.log(productsFound);
+            if (err) {
+                return res.status(BAD_REQUEST).json({
+                    message: "Products not found",
                     status: FAIL
                 });
             }
