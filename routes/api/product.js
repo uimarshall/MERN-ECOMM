@@ -12,11 +12,13 @@ const {
     createProduct,
     getProduct,
     removeProduct,
-    updateProduct
+    updateProduct,
+    getAllProducts
 } = require("../../controllers/productController");
 
-router.get("/:productId", getProduct);
 router.post("/create/:userId", secured, isAuth, isAdmin, createProduct);
+router.get("/:productId", getProduct);
+router.get("/", getAllProducts);
 
 router.put("/:productId/:userId", secured, isAuth, isAdmin, updateProduct);
 // Only the loggedIn user can delete product, hence d 'userId' in d route

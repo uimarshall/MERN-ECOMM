@@ -152,3 +152,44 @@ exports.removeProduct = async(req, res) => {
         });
     });
 };
+
+/** Query Params indicated by '?' is attached to 'req.query'
+ * Products by Qty-sold/Arrival as requested by users
+ * ================By qtySold=============================
+ * Route = /products?sortBy=sold&order=desc&limit=4
+ * ordering will be based on the product sold more, descending order(desc)
+ * 4-of highest sold product will be displayed, hence limit 4
+ *  ===============By Arrival=============================
+ * Route = /products?sortBy=createdAt&order=desc&limit=4
+ * 'createdAt' represents the time the product was created in Db or arrived
+ * Latest arrival will be displayed 1st, like stack-last in first out,hence sortBy=createdAt
+ * If no params are sent, then all products are returned
+ */
+
+// Get All Products
+
+exports.getAllProducts = (req, res) => {
+    let order = req.query.order ? req.query.order : "asc";
+    let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
+    let limit = req.query.limit ? parseInt(req.query.limit) : 6;
+    Product.find()
+        .select("-photo") //deselect photo bcos its too heavy and will slow down response
+        .populate("Category") //Populate the category table/collection
+        .sort([
+            [sortBy, order]
+        ])
+        .limit(limit)
+        .exec((err, productsFound) => {
+            console.log(productsFound);
+            if (err) {
+                return res.status(BAD_REQUEST).json({
+                    message: HttpStatus.getStatusText(BAD_REQUEST),
+                    status: FAIL
+                });
+            }
+            return res.status(ACCEPTED).json({
+                data: productsFound,
+                message: SUCCESS
+            });
+        });
+};
