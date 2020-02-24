@@ -34,8 +34,8 @@ app.use(cookieParser());
 // Routes Middleware
 app.use("/api/users", usersAuthRoute);
 app.use("/api/users", usersRoute);
-app.use("/api/category", categoryRoute);
-app.use("/api/product", productRoute);
+app.use("/api/categories", categoryRoute);
+app.use("/api/products", productRoute);
 
 const port = process.env.PORT || 5000;
 
