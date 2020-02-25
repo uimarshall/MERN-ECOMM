@@ -221,3 +221,20 @@ exports.getRelatedProducts = (req, res) => {
             });
         });
 };
+
+// Get Product Categories
+exports.getProductCategories = (req, res) => {
+    Product.distinct("Category", (err, categories) => {
+        console.log(categories);
+        if (err) {
+            return res.status(BAD_REQUEST).json({
+                message: "Categories not found",
+                status: FAIL
+            });
+        }
+        return res.status(ACCEPTED).json({
+            data: categoriesFound,
+            message: SUCCESS
+        });
+    });
+};

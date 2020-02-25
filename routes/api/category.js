@@ -8,12 +8,17 @@ const {
     categoryById
 } = require("../../middleware/authMiddleware");
 
-const { createCategory, getCategory, getAllCategory, updateCategory, removeCategory } = require("../../controllers/categoryController");
-
+const {
+    createCategory,
+    getCategory,
+    getAllCategory,
+    updateCategory,
+    removeCategory
+} = require("../../controllers/categoryController");
 
 router.post("/create/:userId", secured, isAuth, isAdmin, createCategory);
 router.get("/:categoryId", getCategory);
-router.get("/", getAllCategory);
+router.get("", getAllCategory);
 
 router.put("/:categoryId/:userId", secured, isAuth, isAdmin, updateCategory);
 // Only the loggedIn user can delete product, hence d 'userId' in d route
