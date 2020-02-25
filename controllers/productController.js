@@ -112,7 +112,7 @@ exports.updateProduct = async(req, res) => {
             //Check if any photo is coming from client side
             // 1mb =1000000
             if (files.photo) {
-                console.log("FILES PHOTO", files.photo);
+                // console.log("FILES PHOTO", files.photo);
                 if (files.photo.size > 1000000) {
                     return res.status(BAD_REQUEST).json({
                         err: "Image should be less than 1mb in size"
@@ -274,4 +274,14 @@ exports.listProductsBySearch = (req, res) => {
                 message: SUCCESS
             });
         });
+};
+
+// Get Product photo - Middleware
+exports.getProductPhoto = (req, res, next) => {
+    let productPhoto = req.product.photo;
+    if (productPhoto.data) {
+        res.set("Content-Type", productPhoto.contentType); //contentType=png, jpg etc
+        return res.send(productPhoto.data);
+    }
+    next();
 };
