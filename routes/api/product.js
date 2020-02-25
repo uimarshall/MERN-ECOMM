@@ -14,7 +14,8 @@ const {
     removeProduct,
     updateProduct,
     getAllProducts,
-    getRelatedProducts
+    getRelatedProducts,
+    listProductsBySearch
 } = require("../../controllers/productController");
 
 router.post("/create/:userId", secured, isAuth, isAdmin, createProduct);
@@ -24,6 +25,8 @@ router.get("/:productId", getProduct);
 router.get("/", getAllProducts);
 // Get Related Product
 router.get("/related/:productId", getRelatedProducts);
+// Get Products by search
+router.post("/by/search", listProductsBySearch); //Since the search params is coming from d req body,we use post
 
 router.put("/:productId/:userId", secured, isAuth, isAdmin, updateProduct);
 // Only the loggedIn user can delete product, hence d 'userId' in d route

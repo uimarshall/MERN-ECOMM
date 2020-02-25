@@ -221,3 +221,57 @@ exports.getRelatedProducts = (req, res) => {
             });
         });
 };
+
+// ======================List products by search=================================
+/**
+ *
+ * we will implement product search in react frontend
+ * we will show categories in checkbox and price range in radio buttons
+ * as the user clicks on those checkbox and radio buttons
+ * we will make api request and show the products to users based on what he wants
+ */
+
+exports.listProductsBySearch = (req, res) => {
+    const { filters } = req.body;
+    let order = req.body.order ? req.body.order : "desc";
+    let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
+    let limit = req.body.limit ? parseInt(req.body.limit) : 100;
+    let skip = parseInt(req.body.skip);
+    let findArgs = {};
+
+    for (let key in filters) {
+        if (filters[key].length > 0) {
+            if (key === "price") {
+                // gte -  greater than price [0-10]
+                // lte - less than
+                findArgs[key] = {
+                    $gte: filters[key][0],
+                    $lte: filters[key][1]
+                };
+            } else {
+                findArgs[key] = filters[key];
+            }
+        }
+    }
+
+    Product.find(findArgs)
+        .select("-photo")
+        .populate("Category")
+        .sort([
+            [sortBy, order]
+        ])
+        .skip(skip)
+        .limit(limit)
+        .exec((err, data) => {
+            if (err) {
+                return res.status(BAD_REQUEST).json({
+                    error: "Products not found"
+                });
+            }
+            res.status(OK).json({
+                size: data.length,
+                data,
+                message: SUCCESS
+            });
+        });
+};
