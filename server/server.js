@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 // We will be storing the user Credentials in the cookie
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 // const expressValidator = require("express-validator");
 
 const path = require("path");
