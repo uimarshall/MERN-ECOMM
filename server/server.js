@@ -31,6 +31,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 // app.use(expressValidator());
+app.use(cors());
 
 // Routes Middleware
 app.use("/api/users", usersAuthRoute);
