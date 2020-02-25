@@ -97,3 +97,33 @@ exports.signout = (req, res) => {
     res.clearCookie("t");
     res.json({ message: "You have signed out successfully!" });
 };
+
+// Get Single user
+exports.getUser = (req, res) => {
+    req.profile.hashed_password = undefined;
+    req.profile.salt = undefined;
+    return res.status(OK).json({
+        data: req.profile,
+        status: SUCCESS
+    });
+};
+
+// Update User
+// '$set: req.body' - whatever is coming frm the req body is 'reset'
+exports.updateUser = (req, res) => {
+    User.findOneAndUpdate({ _id: req.profile._id }, { $set: req.body }, { new: true },
+        (err, userFound) => {
+            if (err) {
+                return res.status(BAD_REQUEST).json({
+                    error: "You are not authorised to perform this action"
+                });
+            }
+            userFound.hashed_password = undefined;
+            userFound.salt = undefined;
+            res.status(OK).json({
+                data: userFound,
+                status: SUCCESS
+            });
+        }
+    );
+};
