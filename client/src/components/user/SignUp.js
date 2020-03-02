@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { API } from "../../config";
 
+// ==========================TODO'S==================================
+/** 1. Declare the state variable as 'values'
+ * 2. Update the state with entries coming from the form using 'setValue'
+ * Take the values stored in the state and send it to backend using d 'signUp' fn
+ */
+
 const SignUp = () => {
 	const [values, setValues] = useState({
 		name: "",
@@ -9,15 +15,15 @@ const SignUp = () => {
 		error: "",
 		success: false
 	});
-	const { name, email, password, error, success } = values;
 
 	// Anytime there is an event in the form, we hv to grab d change and update the state
 	// handleChange is a higher order fn, which is a fn returning another fn
-	const handleChange = name => event => {
-		setValues({ ...values, error: false, [name]: event.target.value });
+	const handleChange = name => e => {
+		setValues({ ...values, error: false, [name]: e.target.value });
 	};
 
-	const signup = user => {
+	// Function to post data to Db
+	const signUpUser = user => {
 		fetch(`${API}/signup`, {
 			method: "POST",
 			headers: {
@@ -35,9 +41,14 @@ const SignUp = () => {
 			});
 	};
 
+	const { name, email, password, error, success } = values;
 	const handleSubmit = e => {
 		e.preventDefault();
-		signup({ name: name, email: email, password: password });
+		// Frm d User Model, a user must hv name, email,password,set these fields to what is
+		// coming the state(values) as destructured above
+		// Take the form entries stored in d state and submit(click submit) to backend using 'signUp() function'
+		let newUser = { name: name, email: email, password: password };
+		signUpUser(newUser);
 	};
 
 	const signUpForm = () => (
@@ -50,6 +61,7 @@ const SignUp = () => {
 					onChange={handleChange("name")}
 					type="text"
 					className="form-control"
+					value={name}
 				/>
 			</div>
 			<div className="form-group">
@@ -60,6 +72,7 @@ const SignUp = () => {
 					onChange={handleChange("email")}
 					type="email"
 					className="form-control"
+					value={email}
 				/>
 			</div>
 			<div className="form-group">
@@ -70,6 +83,7 @@ const SignUp = () => {
 					onChange={handleChange("password")}
 					type="password"
 					className="form-control"
+					value={password}
 				/>
 			</div>
 			<button onSubmit={handleSubmit} type="submit" className="btn btn-primary">

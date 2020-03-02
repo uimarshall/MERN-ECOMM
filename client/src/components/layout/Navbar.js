@@ -9,7 +9,7 @@ const isActive = (history, path) => {
 	}
 };
 
-// withRouter from react-router-dom opens up props
+// withRouter from react-router-dom opens up props and attaches it d Route comps
 // destructure history from props and pass it to the Navbar comp
 const Navbar = ({ history }) => {
 	return (
@@ -25,8 +25,7 @@ const Navbar = ({ history }) => {
 								<Link
 									className="nav-link"
 									style={isActive(history, "/")}
-									to="/"
-								>
+									to="/">
 									Home <span className="sr-only">(current)</span>
 								</Link>
 							</li>
@@ -34,8 +33,7 @@ const Navbar = ({ history }) => {
 								<Link
 									className="nav-link"
 									style={isActive(history, "/signin")}
-									to="signin"
-								>
+									to="signin">
 									Signin
 								</Link>
 							</li>
@@ -43,8 +41,7 @@ const Navbar = ({ history }) => {
 								<Link
 									className="nav-link"
 									style={isActive(history, "/signup")}
-									to="signup"
-								>
+									to="signup">
 									Signup
 								</Link>
 							</li>
@@ -64,8 +61,7 @@ const Navbar = ({ history }) => {
 						className="navbar-toggler"
 						type="button"
 						data-toggle="collapse"
-						data-target="#mobile-nav"
-					>
+						data-target="#mobile-nav">
 						<span className="navbar-toggler-icon" />
 					</button>
 
@@ -75,8 +71,7 @@ const Navbar = ({ history }) => {
 								<Link
 									className="nav-link"
 									style={isActive(history, "/help")}
-									to="/help"
-								>
+									to="/help">
 									Help?
 								</Link>
 							</li>
@@ -84,8 +79,7 @@ const Navbar = ({ history }) => {
 								<Link
 									className="nav-link"
 									style={isActive(history, "/account")}
-									to="/account"
-								>
+									to="/account">
 									Account
 								</Link>
 							</li>
@@ -93,8 +87,7 @@ const Navbar = ({ history }) => {
 								<Link
 									className="nav-link"
 									style={isActive(history, "/cart")}
-									to="/cart"
-								>
+									to="/cart">
 									Cart
 								</Link>
 							</li>

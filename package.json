@@ -6,7 +6,7 @@
     "scripts": {
         "client-install": "npm install --prefix client",
         "start": "node server/server.js",
-        "server": "nodemon  server/server.js -L",
+        "server": "nodemon server/server.js",
         "client": "npm start --prefix client",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "test": "mocha"
@@ -24,7 +24,6 @@
     "homepage": "https://github.com/uimarshall/MERN-ECOMM#readme",
     "dependencies": {
         "body-parser": "^1.19.0",
-        "concurrently": "^4.1.1",
         "cookie-parser": "^1.4.4",
         "cors": "^2.8.5",
         "dotenv": "^8.0.0",
@@ -40,6 +39,7 @@
         "uuid": "^3.3.2"
     },
     "devDependencies": {
+        "concurrently": "^5.1.0",
         "nodemon": "^2.0.2"
     }
 }
