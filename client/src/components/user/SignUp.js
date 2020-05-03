@@ -19,6 +19,7 @@ const SignUp = () => {
 
 	// Anytime there is an event in the form, we hv to grab d change and update the state
 	// handleChange is a higher order fn, which is a fn returning another fn
+	const { name, email, password, error, success } = values;
 	const handleChange = (name) => (e) => {
 		setValues({ ...values, error: false, [name]: e.target.value });
 	};
@@ -44,7 +45,6 @@ const SignUp = () => {
 			});
 	};
 
-	const { name, email, password, error, success } = values;
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		// Frm d User Model, a user must hv name, email,password,set these fields to what is
@@ -54,7 +54,7 @@ const SignUp = () => {
 		// Javascript object being received as newUser
 		signUpUser(newUser).then((data) => {
 			if (data.error) {
-				setValues({ ...values, error: data.error });
+				setValues({ ...values, error: data.message });
 			} else {
 				setValues({
 					...values,
