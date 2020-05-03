@@ -25,7 +25,8 @@ const SignUp = () => {
 
 	// Function to post data to Db
 	const signUpUser = (user) => {
-		fetch(`${API}/users/signup`, {
+		//return is used to turn fetch to promise
+		return fetch(`${API}/users/signup`, {
 			method: "POST",
 			headers: {
 				Accept: "application/json",
@@ -108,6 +109,26 @@ const SignUp = () => {
 		</form>
 	);
 
+	// Curly braces attract 'return' statement
+	const showError = () => {
+		return (
+			<div
+				className="alert alert-danger"
+				style={{ display: error ? "" : "none" }}>
+				{error}
+			</div>
+		);
+	};
+
+	// Prenthesis wtout curly braces does not attarct 'return'
+	const showSuccess = () => (
+		<div
+			className="alert alert-info"
+			style={{ display: success ? "" : "none" }}>
+			Successfully signed up, Please Sign In
+		</div>
+	);
+
 	return (
 		<Layout
 			className="mb-5"
@@ -115,6 +136,8 @@ const SignUp = () => {
 			description="We are at your service to give you the best experience you can get!">
 			<div className="container col-md-8 offset-md-2">
 				<h3>Signup</h3>
+				{showSuccess()}
+				{showError()}
 				{signUpForm()}
 				{JSON.stringify(values)}
 			</div>
