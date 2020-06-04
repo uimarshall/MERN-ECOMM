@@ -3,10 +3,10 @@ const router = express.Router();
 
 // Require signup from controllers
 const {
-    signup,
-    signin,
-    signout,
-    secured
+	signup,
+	signin,
+	signout,
+	secured,
 } = require("../../controllers/userAuthController");
 const { userValidationRules, validate } = require("../../validator");
 

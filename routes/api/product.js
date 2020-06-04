@@ -1,22 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const {
-    secured,
-    isAdmin,
-    isAuth,
-    userByid,
-    productById
+	secured,
+	isAdmin,
+	isAuth,
+	userByid,
+	productById,
 } = require("../../middleware/authMiddleware");
 
 const {
-    createProduct,
-    getProduct,
-    removeProduct,
-    updateProduct,
-    getAllProducts,
-    getRelatedProducts,
-    listProductsBySearch,
-    getProductPhoto
+	createProduct,
+	getProduct,
+	removeProduct,
+	updateProduct,
+	getAllProducts,
+	getRelatedProducts,
+	listProductCategories,
+	listProductsBySearch,
+	getProductPhoto,
 } = require("../../controllers/productController");
 
 router.post("/create/:userId", secured, isAuth, isAdmin, createProduct);
@@ -26,6 +27,8 @@ router.get("/:productId", getProduct);
 router.get("/", getAllProducts);
 // Get Related Product
 router.get("/related/:productId", getRelatedProducts);
+// Get Product Categories
+router.get("/by/categories", listProductCategories);
 // Get Products by search
 router.post("/by/search", listProductsBySearch); //Since the search params is coming from d req body,we use post
 // Get a particular Product photo
