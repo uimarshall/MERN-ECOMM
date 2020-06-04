@@ -31,7 +31,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 // app.use(expressValidator());
-app.use(cors());
+app.use(cors()); //to handle request coming frm diff origins e.g.client will make req frm port 3000
 
 // Routes Middleware
 app.use("/api/users", usersAuthRoute);

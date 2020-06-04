@@ -28,48 +28,48 @@
 // ==================METHOD 2=========================
 const { body, validationResult } = require("express-validator");
 const userValidationRules = () => {
-    return [
-        // body("username").isEmail(),
-        body("name", "Name is required").notEmpty(),
-        // Email validation
-        body("email", "Email must be between 4 to 25 characters")
-        .matches(/.+\@.+\..+/)
-        .withMessage("Email must contain @")
-        .isLength({
-            min: 4,
-            max: 25
-        }),
+	return [
+		// body("username").isEmail(),
+		body("name", "Name is required").notEmpty(),
+		// Email validation
+		body("email", "Email must be between 4 to 25 characters")
+			.matches(/.+\@.+\..+/)
+			.withMessage("Email must contain @")
+			.isLength({
+				min: 4,
+				max: 25,
+			}),
 
-        // password must be at least 6 chars long
+		// password must be at least 6 chars long
 
-        body("password", "Password is required")
-        .notEmpty()
+		body("password", "Password is required")
+			.notEmpty()
 
-        .isLength({ min: 6 })
-        .withMessage("Password must contain at least 6 characters")
-        .matches(/\d/)
-        .withMessage("Password must contain a number")
-    ];
+			.isLength({ min: 6 })
+			.withMessage("Password must contain at least 6 characters")
+			.matches(/\d/)
+			.withMessage("Password must contain a number"),
+	];
 };
 
 const validate = (req, res, next) => {
-    const errors = validationResult(req);
-    if (errors.isEmpty()) {
-        return next();
-    }
-    const extractedErrors = [];
-    errors.array().map(err =>
-        extractedErrors.push({
-            [err.param]: err.msg
-        })
-    );
+	const errors = validationResult(req);
+	if (errors.isEmpty()) {
+		return next();
+	}
+	const extractedErrors = [];
+	errors.array().map((err) =>
+		extractedErrors.push({
+			[err.param]: err.msg,
+		})
+	);
 
-    return res.status(422).json({
-        errors: extractedErrors
-    });
+	return res.status(422).json({
+		errors: extractedErrors,
+	});
 };
 
 module.exports = {
-    userValidationRules,
-    validate
+	userValidationRules,
+	validate,
 };
