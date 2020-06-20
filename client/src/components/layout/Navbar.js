@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import { Link, withRouter } from "react-router-dom";
+import { signOutUser, isAuthenticated } from "../auth";
 const isActive = (history, path) => {
 	if (history.location.pathname === path) {
 		return { color: "#ff8800" };
@@ -29,22 +30,40 @@ const Navbar = ({ history }) => {
 									Home <span className="sr-only">(current)</span>
 								</Link>
 							</li>
-							<li className="nav-item">
-								<Link
-									className="nav-link"
-									style={isActive(history, "/signin")}
-									to="signin">
-									Signin
-								</Link>
-							</li>
-							<li className="nav-item">
-								<Link
-									className="nav-link"
-									style={isActive(history, "/signup")}
-									to="signup">
-									Signup
-								</Link>
-							</li>
+							{!isAuthenticated() && (
+								<>
+									<li className="nav-item">
+										<Link
+											className="nav-link"
+											style={isActive(history, "/signin")}
+											to="signin">
+											Signin
+										</Link>
+									</li>
+									<li className="nav-item">
+										<Link
+											className="nav-link"
+											style={isActive(history, "/signup")}
+											to="signin">
+											Signup
+										</Link>
+									</li>
+								</>
+							)}
+							{isAuthenticated() && (
+								<li className="nav-item">
+									<span
+										className="nav-link"
+										style={{ cursor: "pointer", color: "#fff" }}
+										onClick={() => {
+											signOutUser(() => {
+												history.push("/");
+											});
+										}}>
+										Signout
+									</span>
+								</li>
+							)}
 						</ul>
 					</div>
 					<div className="flex-grow-1 d-flex">

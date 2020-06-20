@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { API } from "../../config";
 import Layout from "../layout/Layout";
+import { Link } from "react-router-dom";
+import { signUpUser } from "../auth";
 
 // ==========================TODO'S==================================
 /** 1. Declare the state variable as 'values'
@@ -13,7 +14,7 @@ const SignUp = () => {
 		name: "",
 		email: "",
 		password: "",
-		error: "",
+		error: [],
 		success: false,
 	});
 
@@ -24,37 +25,18 @@ const SignUp = () => {
 		setValues({ ...values, error: false, [name]: e.target.value });
 	};
 
-	// Function to post data to Db
-	const signUpUser = (user) => {
-		//return is used to turn fetch to promise
-		return fetch(`${API}/users/signup`, {
-			method: "POST",
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-			},
-			// Convert the obj sent from handleSubmit to json string
-			// Only JSON str can be sent to the backend
-			body: JSON.stringify(user),
-		})
-			.then((res) => {
-				return res.json();
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
-
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setValues({ ...values, error: false });
 		// Frm d User Model, a user must hv name, email,password,set these fields to what is
 		// coming the state(values) as destructured above
 		// Take the form entries stored in d state and submit(click submit) to backend using 'signUp() function'
 		let newUser = { name: name, email: email, password: password };
 		// Javascript object being received as newUser
 		signUpUser(newUser).then((data) => {
-			if (data.error) {
-				setValues({ ...values, error: data.message });
+			if (data.errors) {
+				// console.log(data.errors);
+				setValues({ ...values, error: data.errors, success: false }); //if 'error',populate the error in the state with 'data.error'
 			} else {
 				setValues({
 					...values,
@@ -67,6 +49,35 @@ const SignUp = () => {
 			}
 		});
 	};
+
+	// Curly braces attract 'return' statement
+
+	const showError = () => {
+		console.log(error);
+		return Object.keys(error).map((key, index) => {
+			console.log(error[key]);
+			return (
+				//if no error, dont display the div, else display the error
+				<div
+					key={index}
+					className="alert alert-danger"
+					style={{ display: key ? "" : "none" }}>
+					{error[key].name}
+					{error[key].email}
+					{error[key].password}
+				</div>
+			);
+		});
+	};
+
+	// Prenthesis wtout curly braces does not attarct 'return'
+	const showSuccess = () => (
+		<div
+			className="alert alert-info"
+			style={{ display: success ? "" : "none" }}>
+			Account Created Successfully, Please <Link to="/signin">Sign In</Link>.
+		</div>
+	);
 
 	const signUpForm = () => (
 		<form className="mb-2" onSubmit={handleSubmit}>
@@ -109,26 +120,6 @@ const SignUp = () => {
 		</form>
 	);
 
-	// Curly braces attract 'return' statement
-	const showError = () => {
-		return (
-			<div
-				className="alert alert-danger"
-				style={{ display: error ? "" : "none" }}>
-				{error}
-			</div>
-		);
-	};
-
-	// Prenthesis wtout curly braces does not attarct 'return'
-	const showSuccess = () => (
-		<div
-			className="alert alert-info"
-			style={{ display: success ? "" : "none" }}>
-			Successfully signed up, Please Sign In
-		</div>
-	);
-
 	return (
 		<Layout
 			className="mb-5"
@@ -141,7 +132,6 @@ const SignUp = () => {
 				{signUpForm()}
 				{JSON.stringify(values)}
 			</div>
-			<div>{API}</div>
 		</Layout>
 	);
 };
