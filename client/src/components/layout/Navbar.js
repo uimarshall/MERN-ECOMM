@@ -30,14 +30,26 @@ const Navbar = ({ history }) => {
 									Home <span className="sr-only">(current)</span>
 								</Link>
 							</li>
-							<li className="nav-item">
-								<Link
-									className="nav-link"
-									style={isActive(history, "/user/dashboard")}
-									to="/user/dashboard">
-									Dashboard
-								</Link>
-							</li>
+							{isAuthenticated() && isAuthenticated().userFound.role === 0 && (
+								<li className="nav-item">
+									<Link
+										className="nav-link"
+										style={isActive(history, "/user/dashboard")}
+										to="/user/dashboard">
+										Dashboard
+									</Link>
+								</li>
+							)}
+							{isAuthenticated() && isAuthenticated().userFound.role === 1 && (
+								<li className="nav-item">
+									<Link
+										className="nav-link"
+										style={isActive(history, "/admin/dashboard")}
+										to="/admin/dashboard">
+										Dashboard
+									</Link>
+								</li>
+							)}
 							{!isAuthenticated() && (
 								<>
 									<li className="nav-item">

@@ -7,6 +7,8 @@ import SignIn from "./components/user/SignIn";
 import SignUp from "./components/user/SignUp";
 import Dashboard from "./components/user/Dashboard";
 import PrivateRoute from "./components/auth/PrivateRoute";
+import AdminDashboard from "./components/user/AdminDashboard";
+import AdminPrivateRoute from "./components/auth/AdminPrivateRoute";
 import "./App.css";
 
 const Routes = () => {
@@ -21,6 +23,11 @@ const Routes = () => {
 						<Route exact path="/signin" component={SignIn} />
 						<Route exact path="/signup" component={SignUp} />
 						<PrivateRoute exact path="/user/dashboard" component={Dashboard} />
+						<AdminPrivateRoute
+							exact
+							path="/admin/dashboard"
+							component={AdminDashboard}
+						/>
 					</Switch>
 				</div>
 				<Footer />
