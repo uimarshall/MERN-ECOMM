@@ -78,6 +78,7 @@ export const signOutUser = (next) => {
 };
 
 /**SHOW/HIDE SIGNIN SIGNOUT CONDITIONALLY */
+// You can extract user info frm the signedin user such as name, email etc from the token
 export const isAuthenticated = () => {
 	if (typeof window == "undefined") {
 		return false;

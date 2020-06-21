@@ -30,6 +30,14 @@ const Navbar = ({ history }) => {
 									Home <span className="sr-only">(current)</span>
 								</Link>
 							</li>
+							<li className="nav-item">
+								<Link
+									className="nav-link"
+									style={isActive(history, "/user/dashboard")}
+									to="/user/dashboard">
+									Dashboard
+								</Link>
+							</li>
 							{!isAuthenticated() && (
 								<>
 									<li className="nav-item">
@@ -44,7 +52,7 @@ const Navbar = ({ history }) => {
 										<Link
 											className="nav-link"
 											style={isActive(history, "/signup")}
-											to="signin">
+											to="signup">
 											Signup
 										</Link>
 									</li>
