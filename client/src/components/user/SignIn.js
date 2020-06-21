@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../layout/Layout";
 import { Link, Redirect } from "react-router-dom";
-import { signInUser, authenticateSignInUser } from "../auth";
+import { signInUser, authenticateSignInUser, isAuthenticated } from "../auth";
 
 const SignIn = () => {
 	const [values, setValues] = useState({
@@ -15,6 +15,7 @@ const SignIn = () => {
 	// Anytime there is an event in the form, we hv to grab d change and update the state
 	// handleChange is a higher order fn, which is a fn returning another fn
 	const { email, password, error, loading, redirectToReferrer } = values;
+	const { userFound } = isAuthenticated();
 	const handleChange = (name) => (e) => {
 		setValues({ ...values, error: false, [name]: e.target.value });
 	};
@@ -67,7 +68,11 @@ const SignIn = () => {
 
 	const redirectUser = () => {
 		if (redirectToReferrer) {
-			return <Redirect to="/" />;
+			if (userFound && userFound.role === 1) {
+				return <Redirect to="/admin/dashboard" />;
+			} else {
+				return <Redirect to="/user/dashboard" />;
+			}
 		}
 	};
 
