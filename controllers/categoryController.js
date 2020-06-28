@@ -19,15 +19,15 @@ exports.createCategory = async (req, res) => {
 	try {
 		const newCategory = await new Category(req.body);
 		const catgoryCreated = await newCategory.save();
+
 		return res.status(CREATED).json({
 			data: catgoryCreated,
 			message: SUCCESS,
 		});
-		BAD_REQUEST;
-	} catch (error) {
-		if (error) {
+	} catch (err) {
+		if (err) {
 			return res.status(BAD_REQUEST).json({
-				message: HttpStatus.getStatusText(BAD_REQUEST),
+				error: errorHandler(err),
 				status: FAIL,
 			});
 		}
