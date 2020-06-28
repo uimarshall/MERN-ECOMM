@@ -26,7 +26,7 @@ export const createCategory = (userId, token, category) => {
 // Function to post data to Db
 export const createProduct = (userId, token, product) => {
 	//return is used to turn fetch to promise or make promise available
-	return fetch(`${API}/categories/create/${userId}`, {
+	return fetch(`${API}/products/create/${userId}`, {
 		method: "POST",
 		headers: {
 			Accept: "application/json", //we will send form data
