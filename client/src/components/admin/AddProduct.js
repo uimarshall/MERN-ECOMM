@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../layout/Layout";
 import { isAuthenticated } from "../auth";
-import { createProduct } from "../admin/AdminApi";
+import { createProduct, getCategories } from "../admin/AdminApi";
 
 const AddProduct = () => {
 	// destructure userFound and token from localstorage
@@ -18,7 +18,7 @@ const AddProduct = () => {
 		photo: "",
 		loading: false,
 		error: "",
-		CreatedProduct: "",
+		createdProduct: "",
 		redirectToProfile: false,
 		formData: "",
 	});
@@ -32,14 +32,29 @@ const AddProduct = () => {
 		quantity,
 		loading,
 		error,
-		createProduct,
+		createdProduct,
 		redirectToProfile,
 		formData,
 	} = values;
 
+	// Load categories and set form data
+	const init = () => {
+		getCategories().then((data) => {
+			if (data.error) {
+				setValues({ ...values, error: data.error });
+			} else {
+				setValues({
+					...values,
+					categories: data.data,
+					formData: new FormData(),
+				});
+			}
+		});
+	};
+
 	// Once the component loads, we update the form data
 	useEffect(() => {
-		setValues({ ...values, formData: new FormData() });
+		init();
 	}, []);
 	const handleChange = (name) => (e) => {
 		const value = name === "photo" ? e.target.file : e.target.value;
@@ -64,7 +79,7 @@ const AddProduct = () => {
 					quantity: "",
 					photo: "",
 					loading: false,
-					createProduct: data.name,
+					createdProduct: data.name,
 				});
 			}
 		});
@@ -121,7 +136,14 @@ const AddProduct = () => {
 					Category
 				</label>
 				<select className="form-control" onChange={handleChange("category")}>
-					<option value="">Phones</option>
+					<option>Please select</option>
+					{/* {console.log(categories)} */}
+					{categories &&
+						categories.map((cat) => (
+							<option key={cat._id} value={cat._id}>
+								{cat.name}
+							</option>
+						))}
 				</select>
 			</div>
 			<div class="form-group">
@@ -129,6 +151,7 @@ const AddProduct = () => {
 					Shipping
 				</label>
 				<select className="form-control" onChange={handleChange("shipping")}>
+					<option>Please select</option>
 					<option value="0">No</option>
 					<option value="1">Yes</option>
 				</select>
@@ -137,7 +160,7 @@ const AddProduct = () => {
 				<label htmlFor="name" className="text-muted">
 					Quantity
 				</label>
-				quantity
+
 				<input
 					type="number"
 					className="form-control"
@@ -148,6 +171,36 @@ const AddProduct = () => {
 			<button className="btn btn-outline-warning">Create Product</button>
 		</form>
 	);
+
+	const showError = () => {
+		if (error) {
+			return (
+				<div
+					className="alert alert-danger"
+					style={{ display: error ? "" : "none" }}>
+					{error}
+				</div>
+			);
+		}
+	};
+	const showSuccess = () => {
+		return (
+			<div
+				className="alert alert-info"
+				style={{ display: createdProduct ? "" : "none" }}>
+				<h2>{`${createdProduct} is created!`}</h2>
+			</div>
+		);
+	};
+	const showLoading = () =>
+		loading && (
+			<div
+				className="alert alert-success"
+				style={{ display: createdProduct ? "" : "none" }}>
+				<h2>Loading...</h2>
+			</div>
+		);
+
 	return (
 		<Layout
 			title="Add a new product"
@@ -155,8 +208,9 @@ const AddProduct = () => {
 			className="">
 			<div className="row">
 				<div className="col-md-8 offset-md-2">
-					{/* {showSuccess()} */}
-					{/* {showError()} */}
+					{showLoading()}
+					{showSuccess()}
+					{showError()}
 					{addProductForm()}
 				</div>
 			</div>
